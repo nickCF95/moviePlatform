@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Define properties for log file paths -->
+    <property name="LOG_PATH" value="logs"/>
+    <property name="STORED_LOG" value="${LOG_PATH}/storedLog.log"/>
+
+    <!-- Rolling File Appender for service logs -->
+    <appender name="STORED_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Write logs to service.log -->
+        <file>${STORED_LOG}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- The logs will be archived with a date suffix -->
+            <fileNamePattern>${LOG_PATH}/service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- Retain 30 days of log history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Console Appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Logger for specific service classes -->
+    <logger name="com.vortexBird.moviePlatform.domain.service" level="DEBUG" additivity="false">
+        <appender-ref ref="STORED_FILE" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <!-- Root logger for all other logging -->
+    <root level="INFO">
+        <appender-ref ref="STORED_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
